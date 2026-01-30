@@ -1,0 +1,23 @@
+{
+  "projectName": "apply_now",
+  "criteria": {
+    "keywords": ["software", "backend", "api"],
+    "titles": ["Software Engineer", "Backend Engineer"],
+    "locations": ["Remote", "New York"],
+    "remoteOnly": true,
+    "levels": ["mid", "senior"],
+    "minSalary": 120000
+  },
+  "sources": {
+    "linkedin": { "enabled": true, "maxResults": 50 },
+    "workday": { "enabled": true, "maxResults": 50 }
+  },
+  "automation": {
+    "mode": "fully-automated",
+    "rateLimitMs": 2500,
+    "maxAppliesPerDay": 20
+  },
+  "linkedinImport": {
+    "enabled": true
+  }
+}
