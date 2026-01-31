@@ -17,6 +17,10 @@ Open UI at: http://localhost:5179
 - `sources`: enable LinkedIn/Workday + max results
 - `automation`: fully-automated | review | search-only
 
+## LinkedIn import
+- For now, the app loads a cached profile from `.data/linkedin_profile.json`.
+- I’ll add the OpenClaw live-scrape step next (code-first approach, run later).
+
 ## Notes
 - Uses the OpenClaw browser plugin with your saved sessions (no stored creds).
 - Full automation may trigger anti-bot protections; use responsibly.
