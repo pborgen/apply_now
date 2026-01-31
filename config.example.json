@@ -1,8 +1,8 @@
 {
   "projectName": "apply_now",
   "criteria": {
-    "keywords": ["software", "backend", "api"],
-    "titles": ["Software Engineer", "Backend Engineer"],
+    "keywords": ["Programming", "IT", "Software"],
+    "titles": ["Software Engineer", "Backend Engineer", "Full Stack Engineer"],
     "locations": ["Remote", "New York"],
     "remoteOnly": true,
     "levels": ["mid", "senior"],

@@ -1,76 +1,22 @@
 import http from "node:http";
 import { loadJobs, loadQueue, saveQueue } from "../storage/store.js";
 
-const html = `<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>ApplyNow</title>
-  <style>
-    body { font-family: system-ui, sans-serif; margin: 24px; }
-    .job { border: 1px solid #ddd; padding: 12px; border-radius: 8px; margin-bottom: 10px; }
-    .row { display:flex; gap: 8px; align-items:center; }
-    .muted { color:#666; font-size: 0.9em; }
-    button { padding: 8px 12px; }
-  </style>
-</head>
-<body>
-  <h1>ApplyNow</h1>
-  <p class="muted">Select jobs to apply for, then click “Queue for Apply”.</p>
-  <div id="jobs"></div>
-  <div style="margin-top:16px;">
-    <button id="queue">Queue for Apply</button>
-  </div>
-<script>
-async function fetchJobs(){
-  const res = await fetch('/api/jobs');
-  return res.json();
-}
-
-async function fetchQueue(){
-  const res = await fetch('/api/queue');
-  return res.json();
-}
-
-function render(jobs, queue){
-  const root = document.getElementById('jobs');
-  root.innerHTML = '';
-  jobs.forEach(j => {
-    const el = document.createElement('div');
-    el.className = 'job';
-    el.innerHTML = `
-      <div class="row">
-        <input type="checkbox" data-id="${j.id}" ${queue.includes(j.id) ? 'checked' : ''} />
-        <strong>${j.title}</strong>
-      </div>
-      <div class="muted">${j.company} · ${j.location ?? '—'} · ${j.source}</div>
-      <div><a href="${j.url}" target="_blank" rel="noreferrer">Open</a></div>
-    `;
-    root.appendChild(el);
-  });
-}
-
-async function main(){
-  const [jobs, queue] = await Promise.all([fetchJobs(), fetchQueue()]);
-  render(jobs, queue);
-  document.getElementById('queue').onclick = async () => {
-    const ids = Array.from(document.querySelectorAll('input[type=checkbox]:checked')).map(x => x.dataset.id);
-    await fetch('/api/queue', { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ ids })});
-    alert('Queued ' + ids.length + ' jobs');
-  };
-}
-
-main();
-</script>
-</body>
-</html>`;
-
 export function startUiServer(port = 5179) {
   const server = http.createServer((req, res) => {
     if (!req.url) return;
-    if (req.url === "/") {
-      res.writeHead(200, { "content-type": "text/html" });
-      res.end(html);
+    // CORS for Vite dev server
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    if (req.method === "OPTIONS") {
+      res.writeHead(204);
+      res.end();
+      return;
+    }
+
+    if (req.url === "/health") {
+      res.writeHead(200, { "content-type": "application/json" });
+      res.end(JSON.stringify({ ok: true }));
       return;
     }
     if (req.url === "/api/jobs") {
@@ -100,6 +46,7 @@ export function startUiServer(port = 5179) {
     res.end("Not found");
   });
   server.listen(port, () => {
-    console.log(`UI running at http://localhost:${port}`);
+    console.log(`API server running at http://localhost:${port}`);
   });
+  return server;
 }

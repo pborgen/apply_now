@@ -8,5 +8,5 @@ export async function run(config: AppConfig) {
   if (config.linkedinImport.enabled) {
     await loadLinkedInProfile();
   }
-  // TODO: search sources, build queue, apply
+  // TODO: wire browser driver for LinkedIn/Workday scraping + apply
 }
